@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }}</title>
+</head>
+
+<body>
+    <h1>{{ product.name }}</h1>
+
+    ```
+    <p>Category: {{ product.category.name }}</p>
+    <p>Price: {{ product.price }} GEL</p>
+    <p>Description: {{ product.description }}</p>
+
+    <p>
+        Availability:
+        {% if product.available %}
+        In stock
+        {% else %}
+        Out of stock
+        {% endif %}
+    </p>
+
+    {% if product.is_on_sale %}
+    <h2>SALE!</h2>
+    {% endif %}
+
+    <a href="/">Back to Home</a>
+    ```
+
+</body>
+
+</html>

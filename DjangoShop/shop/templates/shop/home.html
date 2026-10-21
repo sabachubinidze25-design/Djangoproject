@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Shop</title>
+</head>
+
+<body>
+    <h1>Welcome to Django Shop!</h1>
+
+
+    <hr>
+
+    <h2>Categories</h2>
+
+    {% for category in categories %}
+    <div>
+        <h3>
+            <a href="{% url 'category_detail' category.id %}">
+                {{ category.name }}
+            </a>
+        </h3>
+
+        <p>{{ category.description }}</p>
+        <p>Number of products: {{ category.product_count }}</p>
+    </div>
+    {% empty %}
+    <p>No categories available.</p>
+    {% endfor %}
+
+    <hr>
+
+    <h2>All Products</h2>
+
+    {% for product in products %}
+    <div>
+        <h3>
+            <a href="{% url 'product_detail' product.id %}">
+                {{ product.name }}
+            </a>
+        </h3>
+
+        <p>Category: {{ product.category.name }}</p>
+        <p>Price: {{ product.price }} GEL</p>
+
+        {% if product.is_on_sale %}
+        <p><strong>SALE!</strong></p>
+        {% endif %}
+
+        {% if product.available %}
+        <p>Status: In stock</p>
+        {% else %}
+        <p>Status: Out of stock</p>
+        {% endif %}
+
+        <p>{{ product.description }}</p>
+    </div>
+
+    <hr>
+    {% empty %}
+    <p>No products available.</p>
+    {% endfor %}
+
+    <p>
+        <a href="{% url 'sale_products' %}">View Sale Products</a>
+    </p>
+
+
+</body>
+
+</html>

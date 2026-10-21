@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Products on Sale</title>
+</head>
+
+<body>
+    <h1>Products on Sale</h1>
+
+    ```
+    {% for product in products %}
+    <div>
+        <h2>{{ product.name }}</h2>
+        <p>Category: {{ product.category.name }}</p>
+        <p>Price: {{ product.price }} GEL</p>
+        <strong>SALE!</strong>
+        <p>{{ product.description }}</p>
+    </div>
+    {% empty %}
+    <p>No products are currently on sale.</p>
+    {% endfor %}
+
+    <a href="/">Back to Home</a>
+    ```
+
+</body>
+
+</html>
