@@ -1,0 +1,20 @@
+{% load static %}<div class="product-card">
+    <div class="text-center mb-3">{% if product.image %}
+        <img class="img-fluid" style="height:220px; width:100%; object-fit:contain;" src="{{ product.image.url }}"
+            alt="{{ product.name }}">
+        {% else %}
+        <img class="img-fluid" style="height:220px; width:100%; object-fit:contain;"
+            src="{% static 'shop/img/product-1.png' %}" alt="{{ product.name }}">
+        {% endif %}
+    </div>{% if product.is_on_sale %}<span class="badge bg-danger mb-2">SALE</span>{% endif %}<h5><a
+            class="text-dark text-decoration-none" href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+    </h5>
+    <p class="text-muted small mb-2">{{ product.category.name }}</p>
+    <h5 class="text-primary">{{ product.price }} GEL</h5>
+    <p class="small">{% if product.available %}<span class="text-success">In stock</span>{% else %}<span
+            class="text-danger">Out of stock</span>{% endif %}</p>
+    <div class="crud-actions mt-3"><a class="btn btn-sm btn-primary"
+            href="{% url 'product_detail' product.id %}">Details</a><a class="btn btn-sm btn-outline-secondary"
+            href="{% url 'product_update' product.id %}">Edit</a><a class="btn btn-sm btn-outline-danger"
+            href="{% url 'product_delete' product.id %}">Delete</a></div>
+</div>

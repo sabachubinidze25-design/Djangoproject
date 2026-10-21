@@ -1,0 +1,3 @@
+{% extends 'shop/base.html' %}
+{% block title %}Cart | DjangoShop{% endblock %}
+{% block content %}<h1>Shopping cart</h1><div class="alert alert-info mt-3">The current project does not yet include cart/order models. This page is kept as a template, but adding items to a real cart is outside the current assignment.</div><a class="btn btn-primary" href="{% url 'shop_list' %}">Continue shopping</a>{% endblock %}

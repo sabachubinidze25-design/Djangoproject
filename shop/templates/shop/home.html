@@ -1,74 +1,113 @@
-<!DOCTYPE html>
+{% extends 'shop/base.html' %}
+{% load static %}
 
-<html lang="en">
+{% block title %}Home | DjangoShop{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Django Shop</title>
-</head>
+{% block content %}
 
-<body>
-    <h1>Welcome to Django Shop!</h1>
+<section class="p-4 p-md-5 mb-5 rounded bg-light">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <p class="text-primary fw-bold mb-2">WELCOME TO DJANGOSHOP</p>
+
+            <h1 class="display-5 fw-bold">
+                Find your next favourite device.
+            </h1>
+
+            <p class="lead">
+                Browse electronics, explore categories, and manage your product catalogue.
+            </p>
+
+            <a class="btn btn-primary me-2" href="{% url 'shop_list' %}">
+                Browse products
+            </a>
+
+            <a class="btn btn-outline-primary" href="{% url 'product_create' %}">
+                Add a product
+            </a>
+        </div>
+
+        <div class="col-lg-4 text-center mt-4 mt-lg-0">
+            <img class="img-fluid" style="max-height:220px; object-fit:contain;"
+                src="{% static 'shop/img/product-1.png' %}" alt="Electronics">
+        </div>
+    </div>
+</section>
 
 
-    <hr>
-
+<div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Categories</h2>
 
-    {% for category in categories %}
-    <div>
-        <h3>
-            <a href="{% url 'category_detail' category.id %}">
-                {{ category.name }}
-            </a>
-        </h3>
+    <a href="{% url 'shop_list' %}">
+        View all products →
+    </a>
+</div>
 
-        <p>{{ category.description }}</p>
-        <p>Number of products: {{ category.product_count }}</p>
+<div class="row g-3 mb-5">
+
+    {% for category in categories %}
+
+    <div class="col-sm-6 col-lg-3">
+        <a class="text-decoration-none" href="{% url 'category_detail' category.id %}">
+            <div class="p-3 border rounded h-100">
+
+                <h5 class="text-dark">
+                    {{ category.name }}
+                </h5>
+
+                <p class="text-muted mb-0">
+                    {{ category.product_count }}
+                    product{{ category.product_count|pluralize }}
+                </p>
+
+            </div>
+        </a>
     </div>
+
     {% empty %}
-    <p>No categories available.</p>
+
+    <div class="col-12">
+        <p>
+            No categories yet. Add a category in the Django admin,
+            then add products.
+        </p>
+    </div>
+
     {% endfor %}
 
-    <hr>
+</div>
 
-    <h2>All Products</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Available products</h2>
+
+    <a href="{% url 'shop_list' %}">
+        See all →
+    </a>
+</div>
+
+<div class="row g-4">
 
     {% for product in products %}
-    <div>
-        <h3>
-            <a href="{% url 'product_detail' product.id %}">
-                {{ product.name }}
-            </a>
-        </h3>
 
-        <p>Category: {{ product.category.name }}</p>
-        <p>Price: {{ product.price }} GEL</p>
-
-        {% if product.is_on_sale %}
-        <p><strong>SALE!</strong></p>
-        {% endif %}
-
-        {% if product.available %}
-        <p>Status: In stock</p>
-        {% else %}
-        <p>Status: Out of stock</p>
-        {% endif %}
-
-        <p>{{ product.description }}</p>
+    <div class="col-sm-6 col-lg-4 col-xl-3">
+        {% include 'shop/partials/product_card.html' with product=product %}
     </div>
 
-    <hr>
     {% empty %}
-    <p>No products available.</p>
+
+    <div class="col-12">
+        <div class="alert alert-info">
+            No available products yet.
+
+            <a href="{% url 'product_create' %}">
+                Add your first product
+            </a>.
+        </div>
+    </div>
+
     {% endfor %}
 
-    <p>
-        <a href="{% url 'sale_products' %}">View Sale Products</a>
-    </p>
+</div>
 
-
-</body>
-
-</html>
+{% endblock %}
