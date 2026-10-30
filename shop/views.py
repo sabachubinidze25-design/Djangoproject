@@ -1,8 +1,10 @@
+﻿from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
-from django.urls import reverse_lazy
 
 from .forms import ProductForm
 from .models import Product, Category
@@ -91,10 +93,11 @@ class ProductDetailView(DetailView):
         return Product.objects.select_related("category")
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "shop/product_form.html"
+    login_url = "login"
 
     def get_success_url(self):
         return reverse_lazy(
@@ -117,6 +120,8 @@ class ProductCreateView(CreateView):
         return context
 
     def form_valid(self, form):
+        form.instance.user = self.request.user
+
         response = super().form_valid(form)
 
         messages.success(
@@ -126,8 +131,14 @@ class ProductCreateView(CreateView):
 
         return response
 
+
+@login_required(login_url="login")
 def product_update(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(
+        Product,
+        id=product_id,
+        user=request.user
+    )
 
     if request.method == "POST":
         form = ProductForm(
@@ -160,8 +171,13 @@ def product_update(request, product_id):
     )
 
 
+@login_required(login_url="login")
 def product_delete(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(
+        Product,
+        id=product_id,
+        user=request.user
+    )
 
     if request.method == "POST":
         name = product.name
