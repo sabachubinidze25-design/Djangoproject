@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
+from django.core.paginator import Paginator
 
 from .forms import ProductForm
 from .models import Product, Category
@@ -16,9 +17,14 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["products"] = Product.objects.select_related(
+        products = Product.objects.select_related(
             "category"
         ).filter(available=True).order_by("price")
+
+        paginator = Paginator(products, 8)
+        page_number = self.request.GET.get("page")
+
+        context["products"] = paginator.get_page(page_number)
 
         context["categories"] = Category.objects.annotate(
             product_count=Count("products")
@@ -31,6 +37,7 @@ class ShopListView(ListView):
     model = Product
     template_name = "shop/shop.html"
     context_object_name = "products"
+    paginate_by = 8
 
     def get_queryset(self):
         products = Product.objects.select_related(
@@ -65,9 +72,14 @@ class CategoryDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["products"] = Product.objects.select_related(
+        products = Product.objects.select_related(
             "category"
         ).filter(category=self.object).order_by("price")
+
+        paginator = Paginator(products, 8)
+        page_number = self.request.GET.get("page")
+
+        context["products"] = paginator.get_page(page_number)
 
         return context
 
@@ -76,6 +88,7 @@ class SaleProductsView(ListView):
     model = Product
     template_name = "shop/sale.html"
     context_object_name = "products"
+    paginate_by = 8
 
     def get_queryset(self):
         return Product.objects.select_related(

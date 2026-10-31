@@ -1,3 +1,58 @@
 {% extends 'shop/base.html' %}
+
 {% block title %}{{ category.name }} | DjangoShop{% endblock %}
-{% block content %}<div class="mb-4"><a href="{% url 'home' %}">Home</a> / {{ category.name }}<h1 class="mt-3">{{ category.name }}</h1><p class="text-muted">{{ category.description }}</p></div><div class="row g-4">{% for product in products %}<div class="col-sm-6 col-lg-4 col-xl-3">{% include 'shop/partials/product_card.html' with product=product %}</div>{% empty %}<div class="col-12"><p>No products in this category yet.</p></div>{% endfor %}</div>{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <a href="{% url 'home' %}">Home</a> / {{ category.name }}
+
+    <h1 class="mt-3">{{ category.name }}</h1>
+    <p class="text-muted">{{ category.description }}</p>
+</div>
+
+<div class="row g-4">
+
+    {% for product in products %}
+
+    <div class="col-sm-6 col-lg-4 col-xl-3">
+        {% include 'shop/partials/product_card.html' with product=product %}
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+        <p>No products in this category yet.</p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% if products.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        {% if products.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">
+                Page {{ products.number }} of {{ products.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
